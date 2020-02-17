@@ -3,11 +3,11 @@ use num::Num;
 use std::cmp::Reverse;
 use std::collections::BinaryHeap;
 
-pub fn dijkstra<T, U: Copy + Num + Ord>(g: Graph<T, U>, s: usize) -> Vec<Option<U>> {
-    let mut dist: Vec<Option<U>> = std::iter::repeat_with(|| None).take(g.size()).collect();
+pub fn dijkstra<T: Copy + Num + Ord>(g: Graph<T>, s: usize) -> Vec<Option<T>> {
+    let mut dist: Vec<Option<T>> = std::iter::repeat_with(|| None).take(g.size()).collect();
     let mut pq = BinaryHeap::new();
-    dist[s] = Some(U::zero());
-    pq.push((Reverse(U::zero()), s));
+    dist[s] = Some(T::zero());
+    pq.push((Reverse(T::zero()), s));
     while let Some((Reverse(d), u)) = pq.pop() {
         if Some(d) > dist[u] {
             continue;
@@ -29,7 +29,7 @@ mod tests {
 
     #[test]
     fn test() {
-        let mut g: Graph<(), i32> = Graph::new(6);
+        let mut g: Graph<i32> = Graph::new(6);
         g.add_edge(1, 2, 10);
         g.add_edge(2, 4, 40);
         g.add_edge(2, 3, 30);
