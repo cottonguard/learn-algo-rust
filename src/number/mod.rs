@@ -1,10 +1,12 @@
-use num::Num;
+pub mod prime;
+
+use num::Integer;
 
 /// extgcd(a, b) -> (gcd(a, b), x, y)
 /// satisfies ax + by = gcd(a, b)
 pub fn extgcd<T>(a: T, b: T) -> (T, T, T)
 where
-    T: Copy + Num,
+    T: Copy + Integer,
 {
     if b != T::zero() {
         let (g, y, x) = extgcd(b, a % b);
