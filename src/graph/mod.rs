@@ -1,5 +1,6 @@
 pub mod shortest_path;
 
+#[derive(Clone)]
 pub struct Edge<T> {
     pub dest: usize,
     pub value: T,
@@ -11,11 +12,13 @@ struct VertexNode {
     last: usize,
 }
 
+#[derive(Clone)]
 struct EdgeNode<T> {
     inner: Edge<T>,
     next: usize,
 }
 
+#[derive(Clone)]
 pub struct Graph<T> {
     vers: Vec<VertexNode>,
     edges: Vec<EdgeNode<T>>,
@@ -25,20 +28,23 @@ const NIL: usize = usize::max_value();
 
 impl<T> Graph<T> {
     pub fn new(n: usize) -> Self {
-        Self {
-            vers: vec![
-                VertexNode {
-                    first: NIL,
-                    last: NIL
-                };
-                n
-            ],
-            edges: Vec::new(),
-        }
+        let mut g = Self::default();
+        g.resize(n);
+        g
     }
 
     pub fn size(&self) -> usize {
         self.vers.len()
+    }
+
+    pub fn resize(&mut self, n: usize) {
+        self.vers.resize(
+            n,
+            VertexNode {
+                first: NIL,
+                last: NIL,
+            },
+        );
     }
 
     pub fn add_edge(&mut self, u: usize, v: usize, value: T) -> &Edge<T> {
@@ -65,6 +71,15 @@ impl<T> Graph<T> {
 
     pub fn degree(&self, u: usize) -> usize {
         self.edges(u).count()
+    }
+}
+
+impl<T> Default for Graph<T> {
+    fn default() -> Self {
+        Self {
+            vers: Vec::new(),
+            edges: Vec::new(),
+        }
     }
 }
 
