@@ -1,3 +1,5 @@
+pub mod shortest_path;
+
 pub struct Vertex<T> {
     pub value: T,
 }
@@ -43,6 +45,10 @@ impl<T: Default, U> Graph<T, U> {
 }
 
 impl<T, U> Graph<T, U> {
+    pub fn size(&self) -> usize {
+        self.vers.len()
+    }
+
     pub fn add_edge(&mut self, u: usize, v: usize, value: U) -> &Edge<U> {
         let idx = self.edges.len();
         self.edges.push(EdgeNode {
