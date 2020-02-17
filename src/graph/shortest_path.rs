@@ -14,7 +14,7 @@ pub fn dijkstra<T: Copy + Num + Ord>(g: Graph<T>, s: usize) -> Vec<Option<T>> {
         }
         for e in g.edges(u) {
             let new_d = d + e.value;
-            if dist[e.dest].is_none() || Some(new_d) < dist[e.dest] {
+            if dist[e.dest].map_or(true, |d| new_d < d) {
                 dist[e.dest] = Some(new_d);
                 pq.push((Reverse(new_d), e.dest));
             }
