@@ -22,7 +22,7 @@ impl<T: PartialEq> Kmp<T> {
         self.pat.len()
     }
 
-    pub fn search<'a>(&'a self, s: &'a[T]) -> KmpSearcher<'a, T> {
+    pub fn search<'a>(&'a self, s: &'a [T]) -> KmpSearcher<'a, T> {
         KmpSearcher {
             pat: self,
             s,
@@ -31,7 +31,11 @@ impl<T: PartialEq> Kmp<T> {
     }
 
     fn search_next(&self, s: &[T], mut pos: usize) -> usize {
-        let mut i = if pos == 0 { 0 } else { self.tab[self.len() - 1] };
+        let mut i = if pos == 0 {
+            0
+        } else {
+            self.tab[self.len() - 1]
+        };
         while pos < s.len() {
             while i > 0 && self.pat[i] != s[pos] {
                 i = self.tab[i - 1];
@@ -48,7 +52,7 @@ impl<T: PartialEq> Kmp<T> {
 
 pub struct KmpSearcher<'a, T> {
     pat: &'a Kmp<T>,
-    s: &'a[T],
+    s: &'a [T],
     pos: usize,
 }
 
