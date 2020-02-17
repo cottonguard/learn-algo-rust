@@ -6,12 +6,6 @@ pub struct Edge<T> {
     pub value: T,
 }
 
-#[derive(Clone, Copy)]
-struct VertexNode {
-    first: usize,
-    last: usize,
-}
-
 #[derive(Clone)]
 struct EdgeNode<T> {
     inner: Edge<T>,
@@ -20,7 +14,7 @@ struct EdgeNode<T> {
 
 #[derive(Clone)]
 pub struct Graph<T> {
-    vers: Vec<VertexNode>,
+    vers: Vec<usize>,
     edges: Vec<EdgeNode<T>>,
 }
 
@@ -38,34 +32,23 @@ impl<T> Graph<T> {
     }
 
     pub fn resize(&mut self, n: usize) {
-        self.vers.resize(
-            n,
-            VertexNode {
-                first: NIL,
-                last: NIL,
-            },
-        );
+        self.vers.resize(n, NIL);
     }
 
     pub fn add_edge(&mut self, u: usize, v: usize, value: T) -> &Edge<T> {
         let idx = self.edges.len();
         self.edges.push(EdgeNode {
             inner: Edge { dest: v, value },
-            next: NIL,
+            next: self.vers[u],
         });
-        if self.vers[u].first == NIL {
-            self.vers[u].first = idx;
-        } else {
-            self.edges[self.vers[u].last].next = idx;
-        }
-        self.vers[u].last = idx;
+        self.vers[u] = idx;
         &self.edges.last().unwrap().inner
     }
 
     pub fn edges(&self, u: usize) -> Edges<T> {
         Edges {
             g: self,
-            idx: self.vers[u].first,
+            idx: self.vers[u],
         }
     }
 
