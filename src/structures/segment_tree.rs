@@ -1,5 +1,3 @@
-use std::ops::Index;
-
 pub struct SegmentTree<T, Z, F> {
     zero: Z,
     f: F,
@@ -23,11 +21,8 @@ impl<T, Z: Fn() -> T, F: Fn(&T, &T) -> T> SegmentTree<T, Z, F> {
     pub fn set(&mut self, i: usize, value: T) {
         let mut i = self.len() + i;
         self.a[i] = value;
-        loop {
+        while (i >> 1) > 0 {
             i >>= 1;
-            if i == 0 {
-                return;
-            }
             self.a[i] = (self.f)(&self.a[i << 1], &self.a[(i << 1) + 1]);
         }
     }
@@ -60,7 +55,7 @@ impl<T, Z: Fn() -> T, F: Fn(&T, &T) -> T> SegmentTree<T, Z, F> {
     }
 }
 
-impl<T, Z: Fn() -> T, F: Fn(&T, &T) -> T> Index<usize> for SegmentTree<T, Z, F> {
+impl<T, Z: Fn() -> T, F: Fn(&T, &T) -> T> std::ops::Index<usize> for SegmentTree<T, Z, F> {
     type Output = T;
     fn index(&self, i: usize) -> &T {
         &self.a[self.len() + i]
