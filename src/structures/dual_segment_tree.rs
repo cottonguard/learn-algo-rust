@@ -18,15 +18,15 @@ impl<T: Monoid> DualSegmentTree<T> {
     }
 
     pub fn apply(&mut self, l: usize, r: usize, op: &T) {
-        self.apply_rec(0, 0, self.len(), l, r, op);
+        self.apply_rec(1, 0, self.len(), l, r, op);
     }
 
     fn apply_rec(&mut self, k: usize, il: usize, ir: usize, l: usize, r: usize, op: &T) {
         if l <= il && ir <= r {
             self.ops[k] = op.plus(&self.ops[k]);
         } else if l < ir && il < r {
-            let l_cld = 2 * k + 1;
-            let r_cld = 2 * k + 2;
+            let l_cld = 2 * k;
+            let r_cld = 2 * k + 1;
             let im = il + (ir - il) / 2;
             self.ops[l_cld] = self.ops[k].plus(&self.ops[l_cld]);
             self.ops[r_cld] = self.ops[k].plus(&self.ops[r_cld]);
@@ -37,12 +37,12 @@ impl<T: Monoid> DualSegmentTree<T> {
     }
 
     pub fn get(&self, i: usize) -> T {
-        let mut i = i + self.len() - 1;
+        let mut i = i + self.len();
         let mut op = self.ops[i].plus(&T::zero());
         loop {
             i >>= 1;
             op = self.ops[i].plus(&op);
-            if i == 0 {
+            if i == 1 {
                 break;
             }
         }
